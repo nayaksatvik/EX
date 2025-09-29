@@ -1,0 +1,42 @@
+PROGRAM NO:5
+Implement Functions: Count – Sort – Limit – Skip – Aggregate using MongoDB MongoDB Operations: Count, Sort, Limit, Skip, Aggregate
+Sample Collection: students
+
+Example document structure:
+{
+  "_id": 1,
+  "name": "Alice",
+  "age": 21,
+  "marks": 85,
+  "department": "CSE"
+}
+
+1. Count Documents
+Count all documents:
+db.students.countDocuments()
+Count with a condition (e.g., marks > 80):
+db.students.countDocuments({ marks: { $gt: 80 } })
+2. Sort Documents
+Sort by marks in descending order:
+db.students.find().sort({ marks: -1 })
+Sort by name ascending and age descending:
+db.students.find().sort({ name: 1, age: -1 })
+3. Limit Results
+Return top 5 students:
+db.students.find().limit(5)
+4. Skip Documents
+Skip first 5 documents and get the next 5:
+db.students.find().skip(5).limit(5)
+5. Aggregate Documents
+Group by Department and Count Students:
+db.students.aggregate([ { $group: { _id: "$department", totalStudents: { $sum: 1 } } } ])
+Group by Department and Average Marks:
+db.students.aggregate([ { $group: { _id: "$department", avgMarks: { $avg: "$marks" } } } ])
+Filter → Group → Sort → Limit (Full Pipeline):
+
+db.students.aggregate([
+  { $match: { marks: { $gt: 60 } } },
+  { $group: { _id: "$department", avgMarks: { $avg: "$marks" } } },
+  { $sort: { avgMarks: -1 } },
+  { $limit: 3 }
+])
