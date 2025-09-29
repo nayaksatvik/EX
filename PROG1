@@ -1,0 +1,79 @@
+PROGRAM No:1
+Install Hadoop and Implement the following file management tasks in Hadoop: Adding files and
+directories Retrieving files Deleting files and directories. Hint: A typical Hadoop workflow creates data files (such as log files) elsewhere and copies them into HDFS using one of the above command line utilities.
+HADOOP  ENVIRONMENT SETUP
+Hadoop Configuration
+Now, you need to configure some Hadoop files. If you have downloaded the same Hadoop version as me, then you need to go to etc\hadoop folder within the previously extracted Hadoop directory (in my case, the complete path is C:\hadoop-3.2.2\etc\hadoop). Once there, open the following five files with your preferred text editor:
+•	core-site.xml
+•	hadoop-env.cmd
+•	hdfs-site.xml
+•	mapred-site.xml
+•	yarn-site.xml
+
+In the core-site.xml you need to set the default Hadoop File System location. Paste this chunk of code inside <configuration> tag:
+<property>
+  <name>fs.defaultFS</name>
+  <value>hdfs://localhost:9000</value>
+</property>
+n the hadoop-env.cmd file you need to provide the path to Java. This path was previously used when you set the JAVA_HOME environment variable. In my case, I set the JAVA_HOME value to : C:\Java\jdk1.8.0_321\bin; but now, \bin folder must be removed from the path, i.e. I had to use C:\Java\jdk1.8.0_321 path. You need to assign this path as JAVA_HOME value around line 25:
+Before you edit hdfs-site.xml file, you need to create some new folders. Go to Hadoop main directory in the root of your storage drive and create data folder inside of it:
+Now, create the datanode and namenode folders inside the new data directory:
+As you can see, datanode folder has the path C:\hadoop-3.2.2\data\datanode and namenode directory path is C:\hadoop-3.2.2\data\namenode.
+Once this is done, you need to provide this folders paths as properties in the hdfs-site.xml file. You can copy the following chunk directly into <configuration> tag, just be careful to adjust the datanode and namenode paths according to your machine locations:
+<property>
+  <name>dfs.replication</name>
+  <value>1</value>
+</property><property>
+  <name>dfs.namenode.name.dir</name>
+  <value>C:\hadoop-3.2.2\data\namenode</value>
+</property><property>
+  <name>dfs.datanode.data.dir</name>
+  <value>C:\hadoop-3.2.2\data\datanode</value>
+</property>
+In the mapred-site.xml file you need to set yarn as the MapReduce framework. Copy the following code inside <configuration> tag:
+<property>
+  <name>mapreduce.framework.name</name>
+  <value>yarn</value>
+</property>
+Hadoop Environment Variable Configuration
+Once all five files are properly edited, now you need to create an environment variable for Hadoop. Open the environment variables window as you did when you created JAVA_HOME variable (recall you can open the Environment Variables typing "Edit the system environment variables" in the Windows search bar) and create the HADOOP_HOME variable, assign the Hadoop bin folder path as its value (in my case: C:\hadoop-3.2.2\bin):
+Now, you need to edit the Path system variable to add paths to bin and sbin folders of Hadoop. Both folders are in the root directoryof Hadoop. So, bin path is the same you've just assigned to HADOOP_HOME variable (C:\hadoop-3.2.2\bin); sbin path, in my case will be C:\hadoop-3.2.2\sbin :
+Once done, be careful and click on OK in all windows related to the environment variables to save the changes; otherwise, you will need to repeat this process again.
+Fix of Hadoop ‘bin’ Folder
+Now, you need to fix some configuration files. To do it, you need to replace the Hadoop bin folder with another bin folder which already contains all the files properly configured. First, download this compressed file (hadoop3_xFixedbin.rar). Then, you need to delete bin folder:
+Now, you can check the new and fixed bin folder is in Hadoop root:
+And that’s it, you now have Hadoop File System configured on your computer.
+Hadoop Installation Verification
+Finally, to check if Hadoop is working properly you need to run it. To do so, open a command prompt as administrator. Recall you can do this typing “Command Prompt” in the Windows search bar:
+Now, you need to go to the sbin directory inside hadoop folder; in my case, sbin directory is in C:\hadoop-3.2.2\sbin. Once you have typed this path press Enter:
+Then, write the command start-all.cmd and press Enter:
+You will see that several command prompts will open. If Hadoop is properly configured, then this four command prompts will remain open and running:
+•	hadoop datanode
+•	hadoop namenode
+•	yarn resourcemanager
+•	yarn nodemanager
+HDFS File Management Tasks: Read, Write, Delete
+Before starting with we should format namenode and run Hadoop services<datanode and namenode>
+
+hdfs namenode  -format
+start-dfs.cmd
+
+
+
+1. Adding Files and Directories to HDFS
+Create a directory in HDFS:
+hdfs dfs -mkdir /mydata
+Copy a local file to HDFS:
+hdfs dfs -put C:/Users/YourUser/Desktop/sample.txt /mydata/
+2. Retrieving Files from HDFS
+Copy a file from HDFS to the local filesystem:
+hdfs dfs -get /mydata/sample.txt C:/Users/YourUser/Desktop/
+
+Display the content of a file in HDFS:
+hdfs dfs -cat /mydata/sample.txt
+3. Deleting Files and Directories from HDFS
+Delete a file in HDFS:
+hdfs dfs -rm /mydata/sample.txt
+Delete a directory in HDFS:
+hdfs dfs -rm -r /mydata
+ 
